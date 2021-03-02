@@ -21,9 +21,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
@@ -33,13 +44,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import com.example.androiddevchallenge.data.Animal
 import com.example.androiddevchallenge.data.SizeEnum
 import com.example.androiddevchallenge.ui.theme.MyTheme
@@ -70,25 +83,22 @@ fun MyApp() {
         composable(
             "details/{name}/{imageId}",
             arguments = listOf(navArgument("name") { type = NavType.StringType }, navArgument("imageId") { type = NavType.IntType })
-        )
-        {
+        ) {
             DetailsScreen(it.arguments?.getString("name") ?: "Bubu", it.arguments?.getInt("imageId") ?: R.drawable.a1, navController)
         }
     }
 }
 
 @Composable
-fun ListScreen(navController: NavHostController) {
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text(text = "Animals") })
-        }
-    ) {
-        Surface(color = MaterialTheme.colors.background) {
-            LazyColumn {
-                items(20) {
-                    AnimalCard(animal = Animal.generate(), navController)
-                }
+fun ListScreen(navController: NavHostController) = Scaffold(
+    topBar = {
+        TopAppBar(title = { Text(text = "Animals") })
+    }
+) {
+    Surface(color = MaterialTheme.colors.background) {
+        LazyColumn {
+            items(20) {
+                AnimalCard(animal = Animal.generate(), navController)
             }
         }
     }
@@ -98,14 +108,16 @@ fun ListScreen(navController: NavHostController) {
 fun DetailsScreen(name: String, imageId: Int, navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = name) },
+            TopAppBar(
+                title = { Text(text = name) },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                     }
                 }
             )
-        }) {
+        }
+    ) {
         Image(modifier = Modifier.fillMaxWidth(), painter = painterResource(id = imageId), contentDescription = null)
     }
 }
@@ -122,7 +134,7 @@ fun AnimalCard(animal: Animal, navController: NavController) {
                 navController.navigate(
                     "details/${animal.name}/${animal.image}",
 
-                    )
+                )
             }
     ) {
         Column(
@@ -155,34 +167,11 @@ fun AnimalCard(animal: Animal, navController: NavController) {
                     painter = painterResource(id = R.drawable.ic_dog_side),
                     contentDescription = null
                 )
-
             }
         }
         Image(painter = painterResource(id = animal.image), contentDescription = null)
     }
 }
-
-
-//@Composable
-//fun SizeIndicator(size: SizeEnum) {
-//    when (size) {
-//        SizeEnum.small -> Row {
-//            Image(
-//                painter = painterResource(id = R.drawable.ic_dog_side),
-//                contentDescription = null,
-//                Modifier.scale(2f),
-//            )
-//            Image(
-//                painter = painterResource(id = R.drawable.ic_dog_side),
-//                contentDescription = null,
-//                Modifier.scale(1f),
-//            )
-//        }
-//        SizeEnum.medium -> TODO()
-//        SizeEnum.big -> TODO()
-//    }
-//}
-
 
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
@@ -192,7 +181,7 @@ fun LightPreview() {
     }
 }
 
-//@Preview("Dark Theme", widthDp = 360, heightDp = 640)
+@Preview("Dark Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
