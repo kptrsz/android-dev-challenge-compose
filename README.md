@@ -10,7 +10,7 @@ This app is made to discover the capabilities of the Jetpack Compose.
 
 
 ## :bulb: Motivation and Context
-TODO
+The motivations is to help dogs. Later I'm gong to update it to use an actual backend of a local shelter.
 
 
 ## :camera_flash: Screenshots
